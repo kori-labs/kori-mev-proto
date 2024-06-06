@@ -1,0 +1,127 @@
+syntax = "proto3";
+
+package searcher;
+
+import "dto.proto";
+
+import "google/protobuf/timestamp.proto";
+
+// Subscription message for tracking specific packages.
+message PackageSubscriptionV0 {
+  repeated string package = 1; // List of package names to subscribe to.
+}
+
+// Subscription message for tracking specific shared objects.
+message SharedObjectSubscriptionV0 {
+  repeated string object = 1; // List of shared object IDs to subscribe to.
+}
+
+// Subscription message for tracking specific addresses.
+message AddressSubscriptionV0 {
+  repeated string address = 1; // List of addresses to subscribe to.
+}
+
+// Mempool subscription message, allowing subscriptions by package, object, or address.
+message MempoolSubscription {
+  oneof msg {
+    PackageSubscriptionV0 packages = 1; // Subscribe to mempool transactions involving specific packages.
+    SharedObjectSubscriptionV0 objects = 2; // Subscribe to mempool transactions involving specific shared objects.
+    AddressSubscriptionV0 addresses = 3; // Subscribe to mempool transactions involving specific addresses.
+  }
+}
+
+// Response message for sending a bundle.
+message SendBundleResponse {
+  string id = 1; // ID of the sent bundle.
+}
+
+// Request message to get the tip address.
+message GetTipAddress {}
+
+// Response message containing the tip addresses.
+message GetTipAddressResponse {
+  repeated string address = 1; // List of tip addresses.
+}
+
+// Request message for subscribing to bundle results.
+message SubscribeBundleResultsRequest {}
+
+// Message indicating a bundle won an auction.
+message BundleResultAuctionWin {
+  string auction_id = 1; // ID of the auction.
+  uint64 estimated_mist_tip = 2; // Estimated tip amount.
+}
+
+// Message indicating a bundle lost an auction.
+message BundleResultAuctionLoose {
+  string auction_id = 1; // ID of the auction.
+}
+
+// Message indicating a bundle was partially processed.
+message BundleResultPartiallyProcessed {
+  string auction_id = 1; // ID of the auction.
+  repeated bytes digest = 2; // Digests of the processed transactions.
+}
+
+// Message indicating a bundle partially expired.
+message BundleResultPartiallyExpired {
+  string auction_id = 1; // ID of the auction.
+  repeated bytes digest = 2; // Digests of the expired transactions.
+}
+
+// Message indicating a bundle was interrupted.
+message BundleResultInterrupted {
+  bool on_auction = 1; // Whether the bundle was on auction.
+  oneof reason {
+    BundleResultPartiallyProcessed partially_processed = 2; // Partially processed bundle result.
+    BundleResultPartiallyExpired expired = 3; // Partially expired bundle result.
+  }
+}
+
+// Message indicating a bundle auction failed due to an estimate error.
+message BundleResultAuctionFailedEstimate {
+  string auction_id = 1; // ID of the auction.
+  bytes digest = 2; // Digest of the failed transaction.
+  string message = 3; // Error message.
+}
+
+// Message indicating a bundle auction failed due to an internal error.
+message BundleResultInternalError {
+  string auction_id = 1; // ID of the auction.
+  repeated bytes digest = 2; // Digests of the transactions involved.
+  string message = 3; // Error message.
+}
+
+// Message indicating a bundle auction failure.
+message BundleResultAuctionFailed {
+  oneof reason {
+    BundleResultAuctionFailedEstimate estimate_error = 1; // Auction failed due to estimate error.
+    BundleResultInternalError internal_error = 2; // Auction failed due to internal error.
+  }
+}
+
+// Message representing the result of a bundle submission.
+message BundleResult {
+  string id = 1; // ID of the bundle.
+  oneof result {
+    BundleResultAuctionWin win = 2; // Bundle won the auction.
+    BundleResultAuctionLoose loose = 3; // Bundle lost the auction.
+    BundleResultInterrupted drop = 4; // Bundle was interrupted.
+    BundleResultAuctionFailed failure = 5; // Bundle auction failed.
+  }
+}
+
+// Service definition for MEV searchers on the Sui chain.
+service SearcherService {
+  // Subscribe to bundle results.
+  rpc SubscribeBundleResults (SubscribeBundleResultsRequest) returns (stream BundleResult) {}
+
+  // Subscribe to mempool transactions based on specific criteria.
+  rpc SubscribeMempool (MempoolSubscription) returns (stream dto.MempoolTransactionsWithEffects) {}
+
+  // Send a bundle of transactions.
+  rpc SendBundle (dto.Bundle) returns (SendBundleResponse) {}
+
+  // Get the tip address for transaction inclusion.
+  rpc GetTipAddress (GetTipAddress) returns (GetTipAddressResponse) {}
+}

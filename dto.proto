@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package dto;
+
+import "google/protobuf/timestamp.proto";
+
+// Represents a single transaction in the mempool along with its effects.
+message MempoolTransactionWithEffects {
+  bytes digest = 1;  // The unique identifier of the transaction.
+  bytes tx = 2;      // The raw transaction data.
+  bytes effects = 3; // The effects produced by the transaction.
+}
+
+// Represents a collection of transactions in the mempool along with their effects.
+message MempoolTransactionsWithEffects {
+  google.protobuf.Timestamp server_ts = 1; // Server timestamp when the transactions were recorded.
+  uint32 expiration_ns = 2;                // Expiration time in nanoseconds for the transactions.
+  repeated MempoolTransactionWithEffects tx = 3; // List of transactions with their effects.
+}
+
+// Represents a simple transaction.
+message Transaction {
+  bytes data = 1; // The raw data of the transaction.
+}
+
+// Represents a certified transaction, which includes additional validation information.
+message CertifiedTransaction {
+  bytes data = 1; // The raw data of the certified transaction.
+}
+
+// Represents a bundle of transactions to be processed together.
+message Bundle {
+  repeated Transaction tx = 1; // List of transactions in the bundle.
+}
+
+// Represents a bundle of certified transactions to be processed together.
+message CertifiedBundle {
+  repeated CertifiedTransaction tx = 1; // List of certified transactions in the bundle.
+}

@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package block_engine;
+
+import "dto.proto";
+
+message SubscribeBundlesRequest {
+
+}
+
+/// Validators can connect to Block Engines to receive packets and bundles.
+service BlockEngineValidator {
+  /// Validators can submit transaction to the block engine
+  rpc StreamMempool (stream dto.MempoolTransactionsWithEffects) returns (dto.MempoolTransactionsWithEffects) {}
+
+  /// Validators can subscribe to the block engine to receive a stream of simulated and profitable bundles
+  rpc SubscribeBundles (SubscribeBundlesRequest) returns (stream dto.CertifiedBundle) {}
+}
