@@ -4,8 +4,6 @@ package searcher;
 
 import "dto.proto";
 
-import "google/protobuf/timestamp.proto";
-
 // Subscription message for tracking specific packages.
 message PackageSubscriptionV0 {
   repeated string package = 1; // List of package names to subscribe to.
@@ -23,11 +21,9 @@ message AddressSubscriptionV0 {
 
 // Mempool subscription message, allowing subscriptions by package, object, or address.
 message MempoolSubscription {
-  oneof msg {
-    PackageSubscriptionV0 packages = 1; // Subscribe to mempool transactions involving specific packages.
-    SharedObjectSubscriptionV0 objects = 2; // Subscribe to mempool transactions involving specific shared objects.
-    AddressSubscriptionV0 addresses = 3; // Subscribe to mempool transactions involving specific addresses.
-  }
+  PackageSubscriptionV0 packages = 1; // Subscribe to mempool transactions involving specific packages.
+  SharedObjectSubscriptionV0 objects = 2; // Subscribe to mempool transactions involving specific shared objects.
+  AddressSubscriptionV0 addresses = 3; // Subscribe to mempool transactions involving specific addresses.
 }
 
 // Response message for sending a bundle.
@@ -36,7 +32,7 @@ message SendBundleResponse {
 }
 
 // Request message to get the tip address.
-message GetTipAddress {}
+message GetTipAddressRequest {}
 
 // Response message containing the tip addresses.
 message GetTipAddressResponse {
@@ -123,5 +119,5 @@ service SearcherService {
   rpc SendBundle (dto.Bundle) returns (SendBundleResponse) {}
 
   // Get the tip address for transaction inclusion.
-  rpc GetTipAddress (GetTipAddress) returns (GetTipAddressResponse) {}
+  rpc GetTipAddress (GetTipAddressRequest) returns (GetTipAddressResponse) {}
 }
