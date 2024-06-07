@@ -4,6 +4,10 @@ package block_engine;
 
 import "dto.proto";
 
+message StreamMempoolResponse {
+
+}
+
 message SubscribeBundlesRequest {
 
 }
@@ -11,7 +15,7 @@ message SubscribeBundlesRequest {
 /// Validators can connect to Block Engines to receive packets and bundles.
 service BlockEngineValidator {
   /// Validators can submit transaction to the block engine
-  rpc StreamMempool (stream dto.MempoolTransactionsWithEffects) returns (dto.MempoolTransactionsWithEffects) {}
+  rpc StreamMempool (stream dto.MempoolTransactionsWithEffects) returns (StreamMempoolResponse) {}
 
   /// Validators can subscribe to the block engine to receive a stream of simulated and profitable bundles
   rpc SubscribeBundles (SubscribeBundlesRequest) returns (stream dto.CertifiedBundle) {}
