@@ -113,7 +113,7 @@ service SearcherService {
   rpc SubscribeBundleResults (SubscribeBundleResultsRequest) returns (stream BundleResult) {}
 
   // Subscribe to mempool transactions based on specific criteria.
-  rpc SubscribeMempool (MempoolSubscription) returns (stream dto.MempoolTransactionsWithEffects) {}
+  rpc SubscribeMempool (MempoolSubscription) returns (stream dto.MempoolPacket) {}
 
   // Send a bundle of transactions.
   rpc SendBundle (dto.Bundle) returns (SendBundleResponse) {}
