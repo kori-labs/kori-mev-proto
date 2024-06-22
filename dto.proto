@@ -12,7 +12,7 @@ message MempoolTransactionWithEffects {
 }
 
 // Represents a collection of transactions in the mempool along with their effects.
-message MempoolTransactionsWithEffects {
+message MempoolPacket {
   google.protobuf.Timestamp server_ts = 1; // Server timestamp when the transactions were recorded.
   uint32 expiration_ns = 2;                // Expiration time in nanoseconds for the transactions.
   repeated MempoolTransactionWithEffects tx = 3; // List of transactions with their effects.

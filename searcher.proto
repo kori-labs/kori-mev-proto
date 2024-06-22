@@ -32,11 +32,11 @@ message SendBundleResponse {
 }
 
 // Request message to get the tip address.
-message GetTipAddressRequest {}
+message GetTipObjectsRequest {}
 
 // Response message containing the tip addresses.
-message GetTipAddressResponse {
-  repeated string address = 1; // List of tip addresses.
+message GetTipObjectsResponse {
+  repeated string object = 1; // List of tip addresses.
 }
 
 // Request message for subscribing to bundle results.
@@ -119,5 +119,5 @@ service SearcherService {
   rpc SendBundle (dto.Bundle) returns (SendBundleResponse) {}
 
   // Get the tip address for transaction inclusion.
-  rpc GetTipAddress (GetTipAddressRequest) returns (GetTipAddressResponse) {}
+  rpc GetTipObjects (GetTipObjectsRequest) returns (GetTipObjectsResponse) {}
 }
