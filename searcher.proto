@@ -119,5 +119,5 @@ service SearcherService {
   rpc SendBundle (dto.Bundle) returns (SendBundleResponse) {}
 
   // Get the tip address for transaction inclusion.
-  rpc GetTipAddresses (GetTipObjectsRequest) returns (GetTipObjectsResponse) {}
+  rpc GetTipAddresses (GetTipAddressesRequest) returns (GetTipAddressesResponse) {}
 }
