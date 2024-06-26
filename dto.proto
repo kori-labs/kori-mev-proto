@@ -4,28 +4,41 @@ package dto;
 
 import "google/protobuf/timestamp.proto";
 
+message TransactionObject {
+  bytes id = 1;
+  bytes contents = 2; // BCS encoded object data.
+}
+
+message MempoolTransactionEffects {
+  repeated TransactionObject objects_created = 1;
+  repeated TransactionObject objects_updated = 2;
+  repeated bytes objects_removed = 3;
+  repeated bytes objects_wrapped = 4;
+  repeated bytes objects_unwrapped = 5;
+  uint64 gas_cost = 6;
+}
+
 // Represents a single transaction in the mempool along with its effects.
-message MempoolTransactionWithEffects {
-  bytes digest = 1;  // The unique identifier of the transaction.
-  bytes tx = 2;      // The raw transaction data.
-  bytes effects = 3; // The effects produced by the transaction.
+message MempoolTransaction {
+  bytes tx = 2;      // BCS encoded transaction data.
+  MempoolTransactionEffects effects = 3; // The effects produced by the transaction.
 }
 
 // Represents a collection of transactions in the mempool along with their effects.
 message MempoolPacket {
   google.protobuf.Timestamp server_ts = 1; // Server timestamp when the transactions were recorded.
   uint32 expiration_ns = 2;                // Expiration time in nanoseconds for the transactions.
-  repeated MempoolTransactionWithEffects tx = 3; // List of transactions with their effects.
+  repeated MempoolTransaction tx = 3; // List of transactions with their effects.
 }
 
 // Represents a simple transaction.
 message Transaction {
-  bytes data = 1; // The raw data of the transaction.
+  bytes data = 1; // BCS encoded transaction data.
 }
 
 // Represents a certified transaction, which includes additional validation information.
 message CertifiedTransaction {
-  bytes data = 1; // The raw data of the certified transaction.
+  bytes data = 1; // BCS encoded CertifiedTransaction data.
 }
 
 // Represents a bundle of transactions to be processed together.
