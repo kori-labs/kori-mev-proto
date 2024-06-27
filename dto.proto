@@ -5,8 +5,14 @@ package dto;
 import "google/protobuf/timestamp.proto";
 
 message TransactionObject {
-  bytes id = 1;
+  bytes id = 1; // Object id
   bytes contents = 2; // BCS encoded object data.
+}
+
+message TransactionEvent {
+  bytes id = 1; // Event id
+  string type = 2; // Event type
+  bytes content = 3; // Event content
 }
 
 message MempoolTransactionEffects {
@@ -15,12 +21,13 @@ message MempoolTransactionEffects {
   repeated bytes objects_removed = 3;
   repeated bytes objects_wrapped = 4;
   repeated bytes objects_unwrapped = 5;
-  uint64 gas_cost = 6;
+  repeated TransactionEvent events = 6;
+  uint64 gas_cost = 7;
 }
 
 // Represents a single transaction in the mempool along with its effects.
 message MempoolTransaction {
-  bytes tx = 1;      // BCS encoded transaction data.
+  bytes tx = 1;      // BCS encoded SignedTransaction data.
   MempoolTransactionEffects effects = 2; // The effects produced by the transaction.
 }
 
