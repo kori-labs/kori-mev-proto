@@ -20,8 +20,8 @@ message MempoolTransactionEffects {
 
 // Represents a single transaction in the mempool along with its effects.
 message MempoolTransaction {
-  bytes tx = 2;      // BCS encoded transaction data.
-  MempoolTransactionEffects effects = 3; // The effects produced by the transaction.
+  bytes tx = 1;      // BCS encoded transaction data.
+  MempoolTransactionEffects effects = 2; // The effects produced by the transaction.
 }
 
 // Represents a collection of transactions in the mempool along with their effects.
